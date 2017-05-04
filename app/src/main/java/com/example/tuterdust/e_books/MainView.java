@@ -9,4 +9,6 @@ import java.util.List;
 
 public interface MainView {
     void setUpListView(List list);
+
+    void setFund(int fund);
 }

@@ -33,7 +33,6 @@ public class BookJSONDecoder {
 
             for(int i=0; i < jsonBookArray.length(); i++) {
                 JSONObject bookJson = jsonBookArray.getJSONObject(i);
-                System.out.println(bookJson.getString("title"));
                 Book book = createFromJSONObject(bookJson);
                 if(book != null) {
                     results.add(book);

@@ -1,13 +1,17 @@
 package com.example.tuterdust.e_books;
 
 import android.content.Context;
+import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.List;
+import com.squareup.picasso.Picasso;
 
 /**
  * Created by tuterdust on 20/4/2560.
@@ -15,7 +19,13 @@ import java.util.ArrayList;
 
 public class BookAdapter extends ArrayAdapter<Book> {
 
-    public BookAdapter(Context context, ArrayList<Book> books) {
+    static class ViewHolder{
+        public ImageView img;
+        public TextView title;
+        public TextView price;
+    }
+
+    public BookAdapter(Context context,List<Book> books) {
         super(context, 0, books);
         System.out.print("AAA");
 
@@ -24,19 +34,25 @@ public class BookAdapter extends ArrayAdapter<Book> {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         // Get the data item for this position
+        ViewHolder viewHolder = new ViewHolder();
         Book book = getItem(position);
         // Check if an existing view is being reused, otherwise inflate the view
         if (convertView == null) {
-            convertView = LayoutInflater.from(getContext()).inflate(R.layout.book_view, parent, false);
+            viewHolder = new ViewHolder();
+            LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            convertView = inflater.inflate(R.layout.book_view, parent, false);
+            viewHolder.img = (ImageView) convertView.findViewById(R.id.image);
+            viewHolder.title = (TextView) convertView.findViewById(R.id.title);
+            viewHolder.price = (TextView) convertView.findViewById(R.id.price);
+            convertView.setTag(viewHolder);
+        } else {
+            viewHolder = (ViewHolder) convertView.getTag();
         }
         // Lookup view for data population
-        TextView id = (TextView) convertView.findViewById(R.id.id);
-        TextView title = (TextView) convertView.findViewById(R.id.title);
-        TextView price = (TextView) convertView.findViewById(R.id.price);
         // Populate the data into the template view using the data object
-        id.setText(book.getId());
-        title.setText(book.getTitle());
-        price.setText(book.getPrice());
+        viewHolder.title.setText(book.getTitle());
+        viewHolder.price.setText(book.getPrice() + "$");
+        Picasso.with(getContext()).load(Uri.parse(book.getUrl())).into(viewHolder.img);
         // Return the completed view to render on screen
         return convertView;
     }
