@@ -23,12 +23,12 @@ public class SearchActivity extends AppCompatActivity  implements SearchActivity
     protected void onCreate(Bundle savedInstanceState) {
         books = new ArrayList<Book>();
         books = (ArrayList<Book>)getIntent().getSerializableExtra("list");
-        int fund = getIntent().getIntExtra("fund", 0);
+        User user = (User)getIntent().getSerializableExtra("user");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search);
         br = JSONBookRepository.getInstance();
         pr = new SearchActivityPresenter(this, books);
-        pr.setFund(fund);
+        pr.setUser(user);
     }
 
     public void search(View view) {
@@ -40,7 +40,13 @@ public class SearchActivity extends AppCompatActivity  implements SearchActivity
 
     public void onBackPressed() {
         Intent intent = new Intent(SearchActivity.this, MainActivity.class);
-        intent.putExtra("fund", pr.getFund());
+        intent.putExtra("user", pr.getUser());
+        SearchActivity.this.startActivity(intent);
+    }
+
+    public void goUserActivity(View view) {
+        Intent intent = new Intent(SearchActivity.this, UserActivity.class);
+        intent.putExtra("user", pr.getUser());
         SearchActivity.this.startActivity(intent);
     }
 

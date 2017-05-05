@@ -18,8 +18,9 @@ import java.util.Observer;
 public class MainPresenter implements Observer {
 
     private MainView view;
-    private int fund;
     private BookRepository respo;
+    private User user;
+
 
     public MainPresenter(MainView view, BookRepository respo) {
         this.view = view;
@@ -51,19 +52,22 @@ public class MainPresenter implements Observer {
         });
     }
 
-    public void setFund(int fund) {
-        this.fund = fund;
-        view.setFund(fund);
+    public void setUser(User user) {
+        if (user == null)
+            this.user = new User("Guest user");
+        else
+            this.user = user;
+        view.setFund(this.user.fund);
     }
 
-    public int getFund() {
-        return fund;
-    }
 
+    public User getUser() {
+        return user;
+    }
     public void addFund(String added) {
         try {
-            fund += Integer.parseInt(added);
-            view.setFund(fund);
+            user.fund += Integer.parseInt(added);
+            view.setFund(user.fund);
         }catch (Exception e) {
             //do nothing
         }

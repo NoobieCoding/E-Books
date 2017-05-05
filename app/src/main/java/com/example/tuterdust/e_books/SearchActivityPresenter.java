@@ -16,7 +16,7 @@ class SearchActivityPresenter{
     private String keyword;
     private SearchActivityView view;
     private List<Book> books;
-    private int fund;
+    private User user;
 
     public SearchActivityPresenter(SearchActivityView view, List<Book> br) {
             this.view = view;
@@ -48,19 +48,26 @@ class SearchActivityPresenter{
             view.setList(outList);
     }
 
-    public void setFund(int fund) {
-        this.fund = fund;
-        view.setFund(fund);
+    public void setUser(User user) {
+        if (user == null)
+            this.user = new User("Guest user");
+        else
+            this.user = user;
+        view.setFund(user.fund);
     }
 
     public int getFund() {
-        return fund;
+        return user.fund;
+    }
+
+    public User getUser() {
+        return user;
     }
 
     public void addFund(String added) {
         try {
-            fund += Integer.parseInt(added);
-            view.setFund(fund);
+            user.fund += Integer.parseInt(added);
+            view.setFund(user.fund);
         }catch (Exception e) {
             //do nothing
         }

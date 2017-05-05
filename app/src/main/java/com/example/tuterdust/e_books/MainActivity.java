@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.ViewUtils;
 import android.text.InputType;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -29,10 +30,10 @@ public class MainActivity extends AppCompatActivity implements MainView{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        int fund = getIntent().getIntExtra("fund", 0);
+        User user = (User)getIntent().getSerializableExtra("user");
         br = JSONBookRepository.getInstance();
         mp = new MainPresenter(this, br);
-        mp.setFund(fund);
+        mp.setUser(user);
     }
 
     public void setUpListView(List list) {
@@ -46,7 +47,13 @@ public class MainActivity extends AppCompatActivity implements MainView{
     public void goSearchActivity(View view) {
         Intent intent = new Intent(MainActivity.this, SearchActivity.class);
         intent.putExtra("list", (Serializable)(books));
-        intent.putExtra("fund", mp.getFund());
+        intent.putExtra("user", mp.getUser());
+        MainActivity.this.startActivity(intent);
+    }
+
+    public void goUserActivity(View view) {
+        Intent intent = new Intent(MainActivity.this, UserActivity.class);
+        intent.putExtra("user", mp.getUser());
         MainActivity.this.startActivity(intent);
     }
 
