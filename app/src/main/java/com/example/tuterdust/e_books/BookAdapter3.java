@@ -18,7 +18,7 @@ import com.squareup.picasso.Picasso;
  * Created by tuterdust on 20/4/2560.
  */
 
-public class BookAdapter extends ArrayAdapter<Book>{
+public class BookAdapter3 extends ArrayAdapter<Book>{
 
     public Presenter presenter;
 
@@ -26,12 +26,12 @@ public class BookAdapter extends ArrayAdapter<Book>{
         public ImageView img;
         public TextView title;
         public TextView price;
-        public ImageButton addButton;
+        public ImageButton removeButton;
     }
 
-    public BookAdapter(Context context,List<Book> books, Presenter pr) {
+    public BookAdapter3(Context context,List<Book> books, Presenter pr) {
         super(context, 0, books);
-         presenter= pr;
+        presenter= pr;
     }
 
     @Override
@@ -43,11 +43,11 @@ public class BookAdapter extends ArrayAdapter<Book>{
         if (convertView == null) {
             viewHolder = new ViewHolder();
             LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            convertView = inflater.inflate(R.layout.book_view, parent, false);
+            convertView = inflater.inflate(R.layout.book_view3, parent, false);
             viewHolder.img = (ImageView) convertView.findViewById(R.id.image);
             viewHolder.title = (TextView) convertView.findViewById(R.id.title);
             viewHolder.price = (TextView) convertView.findViewById(R.id.price);
-            viewHolder.addButton = (ImageButton) convertView.findViewById(R.id.add_button);
+            viewHolder.removeButton = (ImageButton) convertView.findViewById(R.id.remove_button);
             convertView.setTag(viewHolder);
         } else {
             viewHolder = (ViewHolder) convertView.getTag();
@@ -56,10 +56,11 @@ public class BookAdapter extends ArrayAdapter<Book>{
         // Populate the data into the template view using the data object
         viewHolder.title.setText(book.getTitle());
         viewHolder.price.setText(book.getPrice() + "$");
-        viewHolder.addButton.setOnClickListener(new View.OnClickListener() {
+        viewHolder.removeButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                presenter.addToCart(book);
+                presenter.removeBook(book);
+                notifyDataSetChanged();
             }
         });
         Picasso.with(getContext()).load(Uri.parse(book.getUrl())).into(viewHolder.img);

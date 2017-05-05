@@ -19,4 +19,10 @@ public class User implements Serializable{
         fund = 0;
     }
 
+    public void addBooks(List<Book>books) {
+        for(int i =0; i < books.size(); i++) {
+            ownBook.add(books.get(i));
+        }
+    }
+
 }

@@ -8,5 +8,6 @@ import java.util.List;
 
 interface SearchActivityView {
     void setList(List<Book> outList);
+
     void setFund(int fund);
 }

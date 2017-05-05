@@ -23,12 +23,14 @@ public class SearchActivity extends AppCompatActivity  implements SearchActivity
     protected void onCreate(Bundle savedInstanceState) {
         books = new ArrayList<Book>();
         books = (ArrayList<Book>)getIntent().getSerializableExtra("list");
+        Cart cart = (Cart)getIntent().getSerializableExtra("cart");
         User user = (User)getIntent().getSerializableExtra("user");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search);
         br = JSONBookRepository.getInstance();
         pr = new SearchActivityPresenter(this, books);
         pr.setUser(user);
+        pr.setCart(cart);
     }
 
     public void search(View view) {
@@ -41,6 +43,7 @@ public class SearchActivity extends AppCompatActivity  implements SearchActivity
     public void onBackPressed() {
         Intent intent = new Intent(SearchActivity.this, MainActivity.class);
         intent.putExtra("user", pr.getUser());
+        intent.putExtra("cart", pr.getCart());
         SearchActivity.this.startActivity(intent);
     }
 
@@ -53,7 +56,7 @@ public class SearchActivity extends AppCompatActivity  implements SearchActivity
     @Override
     public void setList(List<Book> outList) {
         ListView listView = (ListView)findViewById(R.id.listview);
-        listView.setAdapter(new BookAdapter(this, outList));
+        listView.setAdapter(new BookAdapter(this, outList, pr));
     }
 
     public void setFund(int fund) {
@@ -73,6 +76,27 @@ public class SearchActivity extends AppCompatActivity  implements SearchActivity
                     public void onClick(DialogInterface dialog, int whichButton) {
                         String url = txtUrl.getText().toString();
                         pr.addFund(url);
+                    }
+                })
+                .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int whichButton) {
+                    }
+                })
+                .show();
+    }
+
+    public void openCart(View view) {
+        Cart cart = pr.getCart();
+        final ListView cartList = new ListView(this);
+        cartList.setAdapter(new BookAdapter3(this, cart.getBook(), pr));
+
+        new AlertDialog.Builder(this)
+                .setTitle("Cart")
+                .setMessage("Your cart")
+                .setView(cartList)
+                .setPositiveButton("Checkout", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int whichButton) {
+                        //do something
                     }
                 })
                 .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {

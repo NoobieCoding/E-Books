@@ -31,16 +31,18 @@ public class MainActivity extends AppCompatActivity implements MainView{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         User user = (User)getIntent().getSerializableExtra("user");
+        Cart cart = (Cart)getIntent().getSerializableExtra("cart");
         br = JSONBookRepository.getInstance();
         mp = new MainPresenter(this, br);
         mp.setUser(user);
+        mp.setCart(cart);
     }
 
     public void setUpListView(List list) {
 
         view = (ListView) findViewById(R.id.listview);
         books = list;
-        ArrayAdapter<Book> adapter = new BookAdapter(this, list);
+        ArrayAdapter<Book> adapter = new BookAdapter(this, list, mp);
         view.setAdapter(adapter);
     }
 
@@ -48,6 +50,7 @@ public class MainActivity extends AppCompatActivity implements MainView{
         Intent intent = new Intent(MainActivity.this, SearchActivity.class);
         intent.putExtra("list", (Serializable)(books));
         intent.putExtra("user", mp.getUser());
+        intent.putExtra("cart", mp.getCart());
         MainActivity.this.startActivity(intent);
     }
 
@@ -82,4 +85,27 @@ public class MainActivity extends AppCompatActivity implements MainView{
         TextView fundLabel = (TextView)findViewById(R.id.fund_label);
         fundLabel.setText("Fund: "+ fund +"$");
     }
+
+    public void openCart(View view) {
+        final Cart cart = mp.getCart();
+        final User user = mp.getUser();
+        final ListView cartList = new ListView(this);
+        cartList.setAdapter(new BookAdapter3(this, cart.getBook(), mp));
+
+        new AlertDialog.Builder(this)
+                .setTitle("Cart")
+                .setMessage("Your cart")
+                .setView(cartList)
+                .setPositiveButton("Checkout", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int whichButton) {
+                        cart.checkout();
+                    }
+                })
+                .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int whichButton) {
+                    }
+                })
+                .show();
+    }
+
 }

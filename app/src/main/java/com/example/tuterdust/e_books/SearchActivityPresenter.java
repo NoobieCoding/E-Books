@@ -11,12 +11,13 @@ import java.util.Observer;
  * Created by tuterdust on 27/4/2560.
  */
 
-class SearchActivityPresenter{
+class SearchActivityPresenter implements Presenter{
 
     private String keyword;
     private SearchActivityView view;
     private List<Book> books;
     private User user;
+    private Cart cart;
 
     public SearchActivityPresenter(SearchActivityView view, List<Book> br) {
             this.view = view;
@@ -56,8 +57,15 @@ class SearchActivityPresenter{
         view.setFund(user.fund);
     }
 
-    public int getFund() {
-        return user.fund;
+    public void setCart(Cart cart) {
+        if (cart == null)
+            this.cart = new Cart(user, this);
+        else
+            this.cart = cart;;
+    }
+
+    public Cart getCart() {
+        return cart;
     }
 
     public User getUser() {
@@ -71,5 +79,21 @@ class SearchActivityPresenter{
         }catch (Exception e) {
             //do nothing
         }
+    }
+
+    @Override
+    public void addToCart(Book book) {
+        cart.add(book);
+    }
+
+    @Override
+    public void removeBook(Book book) {
+        cart.remove(book);
+        System.out.println("Success2");
+    }
+
+    @Override
+    public void setChanged() {
+        view.setFund(user.fund);
     }
 }

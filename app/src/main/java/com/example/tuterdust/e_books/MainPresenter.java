@@ -15,11 +15,12 @@ import java.util.Observer;
  */
 
 @SuppressWarnings("Since15")
-public class MainPresenter implements Observer {
+public class MainPresenter implements Observer, Presenter {
 
     private MainView view;
     private BookRepository respo;
     private User user;
+    private Cart cart;
 
 
     public MainPresenter(MainView view, BookRepository respo) {
@@ -60,10 +61,22 @@ public class MainPresenter implements Observer {
         view.setFund(this.user.fund);
     }
 
+    public void setCart(Cart cart) {
+        if (cart == null)
+            this.cart = new Cart(user, this);
+        else
+            this.cart = cart;;
+    }
+
 
     public User getUser() {
         return user;
     }
+
+    public Cart getCart() {
+        return cart;
+    }
+
     public void addFund(String added) {
         try {
             user.fund += Integer.parseInt(added);
@@ -71,6 +84,21 @@ public class MainPresenter implements Observer {
         }catch (Exception e) {
             //do nothing
         }
+    }
+
+    @Override
+    public void addToCart(Book book) {
+        cart.add(book);
+    }
+
+    @Override
+    public void removeBook(Book book) {
+        cart.remove(book);
+    }
+
+    @Override
+    public void setChanged() {
+        view.setFund(user.fund);
     }
 
 }
