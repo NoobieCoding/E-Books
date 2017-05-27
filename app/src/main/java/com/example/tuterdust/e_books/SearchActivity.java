@@ -21,12 +21,12 @@ public class SearchActivity extends AppCompatActivity  implements SearchActivity
     private List<Book> books;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_search);
         books = new ArrayList<Book>();
         books = (ArrayList<Book>)getIntent().getSerializableExtra("list");
         Cart cart = (Cart)getIntent().getSerializableExtra("cart");
         User user = (User)getIntent().getSerializableExtra("user");
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_search);
         br = JSONBookRepository.getInstance();
         pr = new SearchActivityPresenter(this, books);
         pr.setUser(user);

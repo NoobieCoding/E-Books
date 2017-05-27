@@ -1,6 +1,8 @@
 package com.example.tuterdust.e_books;
 
 import android.database.Observable;
+import android.os.Parcel;
+import android.os.Parcelable;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -10,7 +12,7 @@ import java.util.List;
  * Created by tuterdust on 4/5/2560.
  */
 
-public class Cart  implements Serializable{
+public class Cart  implements Parcelable {
 
     private List<Book> inCartBook = new ArrayList<>();
     private User user;
@@ -20,6 +22,21 @@ public class Cart  implements Serializable{
         this.user = user;
         pr = presenter;
     }
+
+    protected Cart(Parcel in) {
+    }
+
+    public static final Creator<Cart> CREATOR = new Creator<Cart>() {
+        @Override
+        public Cart createFromParcel(Parcel in) {
+            return new Cart(in);
+        }
+
+        @Override
+        public Cart[] newArray(int size) {
+            return new Cart[size];
+        }
+    };
 
     public void add(Book book) {
         inCartBook.add(book);
@@ -63,4 +80,8 @@ public class Cart  implements Serializable{
     public List<Book> getBook() {
         return inCartBook;
     }
+
+    public int describeContents() {return 0;}
+
+    public void writeToParcel(Parcel dest, int flags) {}
 }
